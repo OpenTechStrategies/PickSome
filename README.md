@@ -56,6 +56,7 @@ $wgPickSomePage = function($title) {
     return false;
   }
 };
+```
 
 Example to sort the global page alphabetically:
 ```php
@@ -69,7 +70,12 @@ $wgPickSomeSortFunction = function($t1, $t2) {
 };
 ```
 
-```
+## Special Page
+
+This extension creates a new special page called "Special:PickSome".  This is
+the place that most actions are taken through via actions, but also where
+users can view the global PickSome list where all user selections are displayed.
+This is also where `picksome-admin` users can delete other picks.
 
 ## Rights
 
