@@ -33,7 +33,9 @@
     ]
   },
   "AvailableRights": [
-    "picksome"
+    "picksome",
+    "picksome-write",
+    "picksome-admin"
   ],
 	"AutoloadClasses": {
 		"PickSome": "includes/specials/PickSome.php",
@@ -42,8 +44,7 @@
     "PickSomeSession": "includes/PickSomeSession.php"
 	},
 	"ResourceFileModulePaths": {
-		"localBasePath": "",
-		"remoteExtPath": "Comments"
+		"localBasePath": ""
 	},
 	"Hooks": {
 		"LoadExtensionSchemaUpdates": "PickSomeHooks::onLoadExtensionSchemaUpdates",

@@ -1,4 +1,4 @@
--- MySQL/SQLite schema for the Comments extension
+-- MySQL/SQLite schema for the PickSome extension
   
 CREATE TABLE /*_*/PickSome (
   id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
