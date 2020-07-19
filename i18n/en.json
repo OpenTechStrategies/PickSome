@@ -23,6 +23,6 @@
   "picksome-start": "Start Picking",
   "picksomelogpage": "PickSome log",
   "picksomelogpagetext": "This is a log of PickSome choices made by users",
-  "picksome-logpick": "Picked in PickSome",
-  "picksome-logremove": "Removed in PickSome"
+  "logentry-picksome-pick": "$1 Picked $3 in PickSome",
+  "logentry-picksome-remove": "$1 Removed $3 in PickSome"
 }
