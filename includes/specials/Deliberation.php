@@ -1,23 +1,23 @@
 <?php
 
-class PickSome extends SpecialPage {
+class Deliberation extends SpecialPage {
   public const ADD = 0;
   public const REMOVE = 1;
 
   public function __construct() {
-    parent::__construct( 'PickSome' );
+    parent::__construct( 'Deliberation' );
   }
 
   public function execute( $subPage ) {
-    if(!$this->getUser()->isAllowed('picksome')) {
-      throw new PermissionsError('picksome-all');
+    if(!$this->getUser()->isAllowed('deliberation')) {
+      throw new PermissionsError('deliberation-all');
     }
 
     switch ($this->getRequest()->getVal('cmd')) {
       case 'pick':
         $page_picked = WikiPage::newFromID($this->getRequest()->getVal('page'))->getTitle();
-        if(!$this->getUser()->isAllowed('picksome-write')) {
-          throw new PermissionsError('picksome-all');
+        if(!$this->getUser()->isAllowed('deliberation-write')) {
+          throw new PermissionsError('deliberation-all');
         }
         $this->addPickToDb();
         $this->
@@ -28,7 +28,7 @@ class PickSome extends SpecialPage {
         $this->log("pick", $page_picked);
         return;
       case 'start':
-        PickSomeSession::enable();
+        DeliberationSession::enable();
         $this->
           getOutput()->
           redirect(
@@ -36,7 +36,7 @@ class PickSome extends SpecialPage {
           );
         return;
       case 'stop':
-        PickSomeSession::disable();
+        DeliberationSession::disable();
         $this->
           getOutput()->
           redirect(
@@ -44,19 +44,19 @@ class PickSome extends SpecialPage {
           );
         return;
       case 'adminremove':
-        if(!$this->getUser()->isAllowed('picksome-admin')) {
-          throw new PermissionsError('picksome-all');
+        if(!$this->getUser()->isAllowed('deliberation-admin')) {
+          throw new PermissionsError('deliberation-all');
         }
         $this->adminremovePickFromDb();
         $this->
           getOutput()->
           redirect(
-            SpecialPage::getTitleFor('PickSome')->getLocalUrl()
+            SpecialPage::getTitleFor('Deliberation')->getLocalUrl()
           );
         return;
       case 'remove':
-        if(!$this->getUser()->isAllowed('picksome-write')) {
-          throw new PermissionsError('picksome-all');
+        if(!$this->getUser()->isAllowed('deliberation-write')) {
+          throw new PermissionsError('deliberation-all');
         }
         $this->removePickFromDb();
         $this->
@@ -68,24 +68,24 @@ class PickSome extends SpecialPage {
         $this->log("remove", $page_removed);
         return;
     }
-    $this->renderPickSomePage();
+    $this->renderDeliberationPage();
   }
 
   public static function canAdd($title) {
-    return PickSome::can($title, PickSome::ADD);
+    return Deliberation::can($title, Deliberation::ADD);
   }
 
   public static function canRemove($title) {
-    return PickSome::can($title, PickSome::REMOVE);
+    return Deliberation::can($title, Deliberation::REMOVE);
   }
 
   private static function can($title, $permission) {
-    global $wgPickSomePage;
+    global $wgDeliberationPage;
 
-    if ($wgPickSomePage) {
-      if(is_string($wgPickSomePage) && !preg_match($wgPickSomePage, $title->getPrefixedText())) {
+    if ($wgDeliberationPage) {
+      if(is_string($wgDeliberationPage) && !preg_match($wgDeliberationPage, $title->getPrefixedText())) {
         return false;
-      } else if(is_callable($wgPickSomePage) && !call_user_func($wgPickSomePage, $title, $permission)) {
+      } else if(is_callable($wgDeliberationPage) && !call_user_func($wgDeliberationPage, $title, $permission)) {
         return false;
       }
       // If it's not a string, and it's not callable, we'll default to true
@@ -94,12 +94,12 @@ class PickSome extends SpecialPage {
     return true;
   }
 
-  private function renderPickSomePage() {
+  private function renderDeliberationPage() {
     $out = $this->getOutput();
 
     $this->setHeaders();
-    $out->setPageTitle(wfMessage("picksome-global-list"));
-    $template = new PickSomeGlobalTemplate();
+    $out->setPageTitle(wfMessage("deliberation-global-list"));
+    $template = new DeliberationGlobalTemplate();
     $template->set('users_picked_pages', $this->usersPickedPages());
     $template->set('picked_pages', $this->allPickedPages());
     $out->addTemplate($template);
@@ -113,7 +113,7 @@ class PickSome extends SpecialPage {
       !$this->alreadyPickedTwoPages($user_id, $dbw)) {
 
       $dbw->insert(
-        "PickSome",
+        "Deliberation",
         [
           "page_id" => $page,
           "user_id" => $user_id
@@ -125,7 +125,7 @@ class PickSome extends SpecialPage {
     return
       ($dbw->numRows(
         $dbw->select(
-          "PickSome",
+          "Deliberation",
           ["page_id"],
           [
             "page_id" => $this->getRequest()->getVal('page'),
@@ -135,14 +135,14 @@ class PickSome extends SpecialPage {
   }
 
   private function alreadyPickedTwoPages($user_id, $dbw) {
-    global $wgPickSomeNumberOfPicks;
-    return (count($this->usersPickedPages()) >= $wgPickSomeNumberOfPicks);
+    global $wgDeliberationNumberOfPicks;
+    return (count($this->usersPickedPages()) >= $wgDeliberationNumberOfPicks);
   }
 
   private function removePickFromDb() {
     $dbw = wfGetDB(DB_MASTER);
     $dbw->delete(
-      "PickSome",
+      "Deliberation",
       [
         "page_id" => $this->getRequest()->getVal('page'),
         "user_id" => $this->getUser()->getId()
@@ -152,7 +152,7 @@ class PickSome extends SpecialPage {
   private function adminremovePickFromDb() {
     $dbw = wfGetDB(DB_MASTER);
     $dbw->delete(
-      "PickSome",
+      "Deliberation",
       [
         "page_id" => $this->getRequest()->getVal('page'),
         "user_id" => $this->getRequest()->getVal('user')
@@ -160,10 +160,10 @@ class PickSome extends SpecialPage {
   }
 
   private function allPickedPages() {
-    global $wgPickSomeSortFunction;
+    global $wgDeliberationSortFunction;
 
     $dbw = wfGetDB(DB_MASTER);
-    $res = $dbw->select("PickSome", ["page_id", "user_id"]);
+    $res = $dbw->select("Deliberation", ["page_id", "user_id"]);
     $picked_pages = [];
     foreach($res as $row) {
       $page_id = $row->page_id;
@@ -174,10 +174,10 @@ class PickSome extends SpecialPage {
       array_push($picked_pages[$page_id][1], User::newFromID($row->user_id));
     }
 
-    if($wgPickSomeSortFunction) {
+    if($wgDeliberationSortFunction) {
       $cmp_page = function($p1, $p2) {
-        global $wgPickSomeSortFunction;
-        return call_user_func($wgPickSomeSortFunction, $p1[0]->getTitle(), $p2[0]->getTitle());
+        global $wgDeliberationSortFunction;
+        return call_user_func($wgDeliberationSortFunction, $p1[0]->getTitle(), $p2[0]->getTitle());
       };
       usort($picked_pages, $cmp_page);
     }
@@ -188,7 +188,7 @@ class PickSome extends SpecialPage {
   private function usersPickedPages() {
     $dbw = wfGetDB(DB_MASTER);
     $res = $dbw->select(
-      "PickSome",
+      "Deliberation",
       ["page_id"],
       ["user_id" => $this->getUser()->getId()]);
     $picked_pages = [];
@@ -199,7 +199,7 @@ class PickSome extends SpecialPage {
   }
 
   private function log($action, $page) {
-    $log = new LogPage('picksome', false);
+    $log = new LogPage('deliberation', false);
 
     $log->addEntry($action, $page, $page->getText());
   }

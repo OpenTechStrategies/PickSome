@@ -1,13 +1,13 @@
 <?php
 
-class PickSomeGlobalTemplate extends QuickTemplate {
+class DeliberationGlobalTemplate extends QuickTemplate {
   public function execute() {
     global $wgUser;
   ?>
-    <h2><?php echo wfMessage("picksome-my-picks"); ?></h2>
+    <h2><?php echo wfMessage("deliberation-my-picks"); ?></h2>
   <?php
     if(count($this->data['users_picked_pages']) == 0) {
-      echo wfMessage("picksome-no-picks");
+      echo wfMessage("deliberation-no-picks");
     } else {
   ?>
       <ul>
@@ -22,7 +22,7 @@ class PickSomeGlobalTemplate extends QuickTemplate {
     }
   ?>
   </ul>
-  <h2><?php echo wfMessage("picksome-all"); ?></h2>
+  <h2><?php echo wfMessage("deliberation-all"); ?></h2>
   <ul>
   <?php
     foreach($this->data['picked_pages'] as $picked_page) {
@@ -40,10 +40,10 @@ class PickSomeGlobalTemplate extends QuickTemplate {
         }
 
         $adminremove = '';
-        if($wgUser->isAllowed("picksome-admin")) {
+        if($wgUser->isAllowed("deliberation-admin")) {
           $adminremove = '[';
           $adminremove .= "<a href='";
-          $adminremove .= SpecialPage::getTitleFor('PickSome')->getLocalUrl(
+          $adminremove .= SpecialPage::getTitleFor('Deliberation')->getLocalUrl(
             [
               'cmd' => 'adminremove',
               'page' => $picked_page[0]->getId(),
@@ -51,7 +51,7 @@ class PickSomeGlobalTemplate extends QuickTemplate {
             ]
           );
           $adminremove .= "'>";
-          $adminremove .= wfMessage("picksome-unpick");
+          $adminremove .= wfMessage("deliberation-unpick");
           $adminremove .= "</a>";
           $adminremove .= ']';
         }
