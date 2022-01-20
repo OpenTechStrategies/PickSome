@@ -1,59 +1,59 @@
 {
-	"name": "PickSome",
-	"version": "0.0.1",
+	"name": "Deliberation",
+	"version": "0.1.0",
 	"author": [
 		"Open Tech Strategies"
 	],
 	"license-name": "GPL-2.0-or-later",
 	"url": "https://github.com/OpenTechStrategies/torque",
-	"descriptionmsg": "picksome-desc",
+	"descriptionmsg": "deliberation-desc",
 	"type": "specialpages",
 	"requires": {
 		"MediaWiki": ">= 1.31.0"
 	},
   "LogHeaders": {
-    "picksome": "picksomelogpagetext"
+    "deliberation": "deliberationlogpagetext"
   },
   "LogNames": {
-    "picksome": "picksomelogpage"
+    "deliberation": "deliberationlogpage"
   },
   "LogActionsHandlers": {
-    "picksome/*": "LogFormatter"
+    "deliberation/*": "LogFormatter"
   },
   "LogTypes": [
-    "picksome"
+    "deliberation"
   ],
 	"SpecialPages": {
-		"PickSome": "PickSome"
+		"Deliberation": "Deliberation"
 	},
   "MessagesDirs": {
-    "PickSome": [
+    "Deliberation": [
       "i18n"
     ]
   },
   "AvailableRights": [
-    "picksome",
-    "picksome-write",
-    "picksome-admin"
+    "deliberation",
+    "deliberation-write",
+    "deliberation-admin"
   ],
 	"AutoloadClasses": {
-		"PickSome": "includes/specials/PickSome.php",
-    "PickSomeHooks": "includes/PickSomeHooks.php",
-    "PickSomeGlobalTemplate": "includes/templates/PickSomeGlobalTemplate.php",
-    "PickSomeSession": "includes/PickSomeSession.php"
+		"Deliberation": "includes/specials/Deliberation.php",
+    "DeliberationHooks": "includes/DeliberationHooks.php",
+    "DeliberationGlobalTemplate": "includes/templates/DeliberationGlobalTemplate.php",
+    "DeliberationSession": "includes/DeliberationSession.php"
 	},
 	"ResourceFileModulePaths": {
 		"localBasePath": ""
 	},
 	"Hooks": {
-		"LoadExtensionSchemaUpdates": "PickSomeHooks::onLoadExtensionSchemaUpdates",
-    "SiteNoticeAfter": "PickSomeHooks::siteNoticeAfter",
-    "SidebarBeforeOutput": "PickSomeHooks::onSidebarBeforeOutput"
+		"LoadExtensionSchemaUpdates": "DeliberationHooks::onLoadExtensionSchemaUpdates",
+    "SiteNoticeAfter": "DeliberationHooks::siteNoticeAfter",
+    "SidebarBeforeOutput": "DeliberationHooks::onSidebarBeforeOutput"
 	},
   "config": {
-    "PickSomeNumberOfPicks": 2,
-    "PickSomePage": false,
-    "PickSomeSortFunction": false
+    "DeliberationNumberOfPicks": 2,
+    "DeliberationPage": false,
+    "DeliberationSortFunction": false
   },
 	"manifest_version": 1
 }
